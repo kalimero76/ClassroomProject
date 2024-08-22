@@ -1,0 +1,282 @@
+<div *ngIf="course$ | async as course">
+    <div class="courses-detail-main-container">
+      <div class="course-detail-container">
+        <div class="course-details">
+
+            <div class="side-bar-banner">
+            <h2> {{ course.name }}</h2>
+          </div>
+         
+          <!-- <div class="course-banner">
+            <img [src]="course.imageUrl" class="course-banner-image" alt="{{ course.name }}" />
+          </div> -->
+       
+          <div *ngIf="announcements && announcements.length > 0">
+            <p-carousel 
+              [value]="announcements" 
+              [numVisible]="1" 
+              [numScroll]="1" 
+              [circular]="true" 
+              [autoplayInterval]="6000"
+              >
+          
+              <ng-template pTemplate="item" let-announcement>
+                <div class="announcement-item">
+                  <!-- Display materials if they exist -->
+                  <div *ngIf="announcement.materials && announcement.materials.length > 0" >
+                    <app-course-material 
+                      *ngFor="let material of announcement.materials" 
+                      [material]="material">
+                    </app-course-material>
+                  </div>
+          
+                  <!-- Display announcement text -->
+                  <p class="announcement-text">{{ announcement.text }}</p>
+                </div>
+              </ng-template>
+          
+            </p-carousel>
+          </div>
+
+
+          <div class="course-desc">
+            <p>
+              {{ course.description }}
+            </p>
+          </div>
+          <div class="course-fake-rewiews-list">
+            <h2>Students Reviews</h2>
+            <hr />
+           
+          </div>
+        </div>
+        <div class="course-action-items">
+          <div class="side-bar-banner">
+            <h2>Get Flat 80% Off on this course.</h2>
+          </div>
+          <div class="course-selection-cat">
+            <div class="course-selection-personal">Personal</div>
+            <div class="course-selection-team">Team</div>
+          </div>
+          <div class="course-price-discount">
+            <span style="
+              font-size: 24px;
+              font-weight: bold;
+              color: #222;
+              margin: 0px 5px;
+            ">${{ course.price }}</span>
+            <span style="
+              font-size: 18px;
+              font-weight: bold;
+              color: #444;
+              margin: 0px 5px;
+            "><s>$3199</s></span>
+            <span style="font-size: 18px; color: #222; margin: 0px 5px">86% OFF</span>
+            <div class="offer-timer">
+              <p>
+                <i class="fa fa-clock-o" aria-hidden="true"></i><b> 1 Day</b> left at this price.
+              </p>
+            </div>
+          </div>
+          <div class="buy-course-div">
+            <button class="buy-course-button">Buy this course</button>
+          </div>
+          <div class="guarantee-div">
+            <p>30-Day Money-Back Guarantee Full Lifetime Access</p>
+          </div>
+          <div class="course-apply-coupon">
+            <div class="course-selection-gift">
+              <a href="#">Gift this course</a>
+            </div>
+            <div class="course-selection-coupon"><a href="#">Apply coupon</a></div>
+          </div>
+          <div class="devider">
+            <div class="devider-message">or</div>
+          </div>
+          <div class="subscribe-to">
+            Subscribe to Procademy's top courses
+            <p>
+              Get this course, plus 800+ of our top-rated courses, with Personal Plan. <a href="#">Learn more</a>
+            </p>
+          </div>
+          <div class="subscribe-course-div">
+            <button class="subscribe-course-button">Start subscription</button>
+          </div>
+        </div>
+      </div>
+      <a
+[href]= "'https://drive.google.com/file/d/1yqiPxOcsqY7Svto8hqnnnxHQhTtYk7vv/view?usp=drive_web'"
+target="_blank"
+rel="noopener noreferrer"
+>
+filename
+</a>
+    </div>
+<!-- <app-course-work  > </app-course-work> -->
+<!-- <app-course-work [courseId]="courseid"></app-course-work> -->
+  </div>
+
+
+  <div *ngIf="courseWorks$ | async as courseWorks">
+    <div *ngFor="let coursework of courseWorks">
+      <h2>{{ coursework.title }}</h2>
+      <p>{{ coursework.description }}</p>
+      
+      <div *ngFor="let material of coursework.materials"  >
+        <app-course-material [material]="material"></app-course-material>
+      </div>
+    </div>
+  </div>
+  
+  <h2>Course material</h2>
+  
+  <div *ngIf="courseWorksMaterial$ | async as courseWorks">
+    <div *ngFor="let coursework of courseWorks">
+      <h2>{{ coursework.title }}</h2>
+      <p>{{ coursework.description }}</p>
+      
+      <div *ngFor="let material of coursework.materials" >
+        <app-course-material [material]="material"></app-course-material>
+      </div>
+    </div>
+  </div>
+  
+ 
+  <mat-card>
+    <mat-card-header>
+      <mat-card-title>Course Assignments</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <table mat-table [dataSource]="courseWorksMaterial$ | async" class="mat-elevation-z8">
+  
+        <!-- Assignment Column -->
+        <ng-container matColumnDef="assignment">
+          <th mat-header-cell *matHeaderCellDef> Assignment </th>
+          <td mat-cell *matCellDef="let coursework"> {{coursework.title}} </td>
+        </ng-container>
+  
+        <!-- Works Material List Column -->
+        <ng-container matColumnDef="worksMaterial">
+          <th mat-header-cell *matHeaderCellDef> Works Material List </th>
+          <td mat-cell *matCellDef="let coursework">
+            <div *ngIf="coursework.materials && coursework.materials.length">
+              <ul>
+                <li *ngFor="let material of coursework.materials">
+                  <div *ngIf="material.driveFile">
+                    <a [href]="material.driveFile.driveFile.alternateLink" target="_blank">
+                      <img [src]="material.driveFile.driveFile.thumbnailUrl" alt="{{ material.driveFile.driveFile.title }}" />
+                    </a>
+                  </div>
+                  <div *ngIf="material.youtubeVideo">
+                    <youtube-player [videoId]="material.youtubeVideo.id" [width]="160" [height]="115" [loadApi]="true"></youtube-player>
+                  </div>
+                  <div *ngIf="material.link">
+                    <a [href]="material.link.url" target="_blank">{{ material.link.title }}</a>
+                  </div>
+                  <div *ngIf="material.form">
+                    <a [href]="material.form.formUrl" target="_blank">{{ material.form.title }}</a>
+                  </div>
+                </li>
+              </ul>
+            </div>
+          </td>
+        </ng-container>
+  
+        <!-- Submission Area Column -->
+        <ng-container matColumnDef="submission">
+          <th mat-header-cell *matHeaderCellDef> Submission Area </th>
+          <td mat-cell *matCellDef="let coursework">
+           
+            <button mat-raised-button color="primary">Submit</button>
+          </td>
+        </ng-container>
+  
+        <!-- Note Column -->
+        <ng-container matColumnDef="note">
+          <th mat-header-cell *matHeaderCellDef> Note </th>
+          <td mat-cell *matCellDef="let coursework"> {{coursework.note || 'Not graded yet'}} </td>
+        </ng-container>
+  
+        <!-- Header and Row Definitions -->
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+  
+      </table>
+    </mat-card-content>
+  </mat-card>
+  
+
+
+  <mat-card>
+    <mat-card-header>
+      <mat-card-title>Course Assignments</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <table mat-table [dataSource]="courseWorksMaterial$ | async" class="mat-elevation-z8">
+  
+        <!-- Assignment Column -->
+        <ng-container matColumnDef="assignment">
+          <th mat-header-cell *matHeaderCellDef> Assignment </th>
+          <td mat-cell *matCellDef="let coursework"> {{ coursework.title }} </td>
+        </ng-container>
+  
+        <!-- Works Material List Column -->
+        <ng-container matColumnDef="worksMaterial">
+          <th mat-header-cell *matHeaderCellDef> Works Material List </th>
+          <td mat-cell *matCellDef="let coursework">
+            <div *ngIf="coursework.materials && coursework.materials.length">
+              <ul>
+                <li *ngFor="let material of coursework.materials">
+                  <div *ngIf="material.driveFile">
+                    <a [href]="material.driveFile.alternateLink" target="_blank">
+                      <img [src]="material.driveFile.thumbnailUrl" alt="{{ material.driveFile.title }}" />
+                    </a>
+                  </div>
+                  <div *ngIf="material.youtubeVideo">
+                    <youtube-player [videoId]="material.youtubeVideo.id" [width]="160" [height]="115" [loadApi]="true"></youtube-player>
+                  </div>
+                  <div *ngIf="material.link">
+                    <a [href]="material.link.url" target="_blank">{{ material.link.title }}</a>
+                  </div>
+                  <div *ngIf="material.form">
+                    <a [href]="material.form.formUrl" target="_blank">{{ material.form.title }}</a>
+                  </div>
+                </li>
+              </ul>
+            </div>
+          </td>
+        </ng-container>
+  
+        <!-- Submission Area Column -->
+        <ng-container matColumnDef="submission">
+          <th mat-header-cell *matHeaderCellDef> Submission Area </th>
+          <td mat-cell *matCellDef="let coursework">
+            <!-- Use a form to handle the submission -->
+            <form (ngSubmit)="onSubmit(coursework)">
+              <input type="hidden" [value]="coursework.id" name="courseWorkId">
+              <input type="hidden" [value]="courseId" name="courseId">
+  
+              <mat-form-field>
+                <mat-label>Submission Link (if any)</mat-label>
+                <input matInput [(ngModel)]="submissionLink" name="submissionLink">
+              </mat-form-field>
+              
+              <button mat-raised-button color="primary" type="submit">Submit</button>
+            </form>
+          </td>
+        </ng-container>
+  
+        <!-- Note Column -->
+        <ng-container matColumnDef="note">
+          <th mat-header-cell *matHeaderCellDef> Note </th>
+          <td mat-cell *matCellDef="let coursework"> {{ coursework.note || 'Not graded yet' }} </td>
+        </ng-container>
+  
+        <!-- Header and Row Definitions -->
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+  
+      </table>
+    </mat-card-content>
+  </mat-card>
+  

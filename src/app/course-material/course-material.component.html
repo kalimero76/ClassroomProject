@@ -1,0 +1,21 @@
+<div *ngIf="material.driveFile">
+  <a [href]="material.driveFile.driveFile.alternateLink" target="_blank">
+    <img [src]="material.driveFile.driveFile.thumbnailUrl" alt="{{ material.driveFile.driveFile.title }}" class="course-material-image" />
+    <p>{{ material.driveFile.driveFile.title }}</p>
+  </a>
+</div>
+
+<div *ngIf="material.youtubeVideo">
+  <youtube-player [videoId]="material.youtubeVideo.id" [width]="160" [height]="115" [loadApi]="true"></youtube-player>
+  <p>{{ material.youtubeVideo.title }}</p>
+</div>
+
+<div *ngIf="material.link">
+  <h3>Link</h3>
+  <a [href]="material.link.url" target="_blank">{{ material.link.title }}</a>
+</div>
+
+<div *ngIf="material.form">
+  <h3>Google Form</h3>
+  <a [href]="material.form.formUrl" target="_blank">{{ material.form.title }}</a>
+</div>
